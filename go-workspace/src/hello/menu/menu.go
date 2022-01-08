@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -48,7 +51,7 @@ func leComando() int {
 	return comando
 }
 func iniciarMonitoramento() {
-	sites := []string{"https://github.com", "https://www.linkedin.com", "https://mail.google.com/mail/u/0/#inbox", "https://www.youtube.com"}
+	sites := leArquivo()
 	//vezes que o loop sera repetido
 	for i := 0; i < monitoramentos; i++ {
 		for i, j := range sites {
@@ -64,7 +67,10 @@ func iniciarMonitoramento() {
 }
 
 func testandoSite(site string) {
-	resp, _ := http.Get(site)
+	resp, err := http.Get(site)
+	if err != nil {
+		fmt.Println("Ocorreu um erro:", err)
+	}
 	if resp.StatusCode == 200 {
 		fmt.Println("Site:", site, " foi carregado com sucesso!")
 	} else {
@@ -72,4 +78,28 @@ func testandoSite(site string) {
 		fmt.Println("Status code -> ", resp.StatusCode)
 	}
 
+}
+
+func leArquivo() []string {
+	var sites []string
+	arquivo, err := os.Open("sites.txt")
+	//arquivo, err := ioutil.ReadFile("sites.txt")
+	if err != nil {
+		fmt.Println("Ocorreu um erro:", err)
+
+	}
+	reader := bufio.NewReader(arquivo)
+	//linha inteira
+	for {
+		linha, err := reader.ReadString('\n')
+		linha = strings.TrimSpace(linha)
+		sites = append(sites, linha)
+		fmt.Println(linha)
+		if err == io.EOF {
+			break
+
+		}
+	}
+	arquivo.Close()
+	return sites
 }

@@ -1,0 +1,4 @@
+https://mail.google.com/mail/u/0/#inbox
+https://www.youtube.com/watch?v=Jf6jU1YOcBw
+https://github.com/joovitor12/go-repo
+https://cursos.alura.com.br/course/golang/task/28060
